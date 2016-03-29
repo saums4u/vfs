@@ -1,38 +1,16 @@
-# recursiveReaddir
+The goal for this assignment is to build a Dropbox Clone, which is a fancy way of saying a directory that is mirrored in realtime across multiple locations, typically acrosss a network. If a file is added to the server directory, it should get pushed to the client and appear in the client's directory immediately.
 
-A recursive implementation of fs.readdir
 
-## How To Use:
+Time spent: [20]
 
-### Setup
+Completed:
 
-1. Follow the [Node.js Setup Guide](http://guides.codepath.com/nodejs/Setup)
-1. Clone the repo:
+* [x] Required: TCP server
+* [x] Required: CRUD functionalities.
+* [x] Required: client to sync
+* [x] Required: HTTP server to perform CRUD operations.
+* [x] Required: CLI support
 
-    ```bash
-    git clone git@github.com:CrabDude/nodejs-recursivereaddir-starter.git
-    ```
+Walkthrough Gif:
 
-### Development
-
-1. Place all your code in `index.js`'s `function* ls()`:
-
-    ```node
-    #!/usr/bin/env node
-    
-    require('./helper')
-    
-    function* ls() {
-        // Use 'yield' in here
-        console.log('Executing ls function...')
-        
-        // Your implementation here
-    }
-    
-    module.exports = ls
-    ```
-1. Run:
-
-    ```bash
-    ./index.js
-    ```
+![Video Walkthrough](embedded_walkthrough.gif)
