@@ -1,12 +1,13 @@
 #!/usr/bin/env node --use_strict --harmony
 let HTTPServer = require('./crud')
 let request = require('request')
-let tar = require('tar-stream')
 let fs = require('fs')
+var path = require('path');
+var mime = require('mime');
+let unzip = require('unzip')
 let argv = require('yargs').argv
 let dir = argv.dir
-
-let pack = tar.pack() // pack is a streams2 stream 
+let zipFileName = 'vfs_demo.zip'
 
 let options = {
     url: 'http://127.0.0.1:8000/',
@@ -14,8 +15,18 @@ let options = {
 }
 
 let nssocket = require('nssocket');
-function ftpClient() {
+function ftpClient(dir) {
 
+	//first step: download the zip 
+	let r = request(options.url)
+	r.on('response',  function (res) {
+		let filename = path.resolve(path.join(__dirname, zipFileName))
+  		res.pipe(fs.createWriteStream(filename))
+
+  		//extract the zip
+  		// extract doesn't work in strict mode.
+  		//fs.createReadStream(filename).pipe(unzip.Extract({ path: dir }));
+	})
     let outbound = new nssocket.NsSocket();
     outbound.data('VFS_Server', function (data) {
 
@@ -44,7 +55,7 @@ function ftpClient() {
     outbound.connect(8001);
 }
 
-ftpClient()
+ftpClient(dir)
 HTTPServer(dir)
 // let data = request(options, 'http://dev.walmart.com:8000');
 // let extract = tar.extract()

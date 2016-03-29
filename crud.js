@@ -10,6 +10,7 @@ let mkdirp = require('mkdirp')
 let archiver = require('archiver')
 let nssocket = require('nssocket');
 let DIRNAME = '/Users/ssahu6/my_stuff/training/nodejs/week-2/watch_dir/'
+let zipFileName = 'vfs_demo.zip'
 
 function HTTPServer(dir) {
 
@@ -26,26 +27,20 @@ function HTTPServer(dir) {
     app.listen(PORT, () => console.log(`listening @http://127.0.0.1:${PORT}`))
 
     app.head('*', setFileMeta, sendHeaders)
-    app.get('*', setFileMeta, sendHeaders, read)
+    app.get('*', read)
     app.put('*', setFileMeta, setDirDetails, create)
     app.post('*', setFileMeta, update)
     app.delete('*', setFileMeta, remove)
 
 }
-
+    
 function read(req, res) {
 
-    let filePath = path.resolve(path.join(DIRNAME, req.url))
-    if(filePath.indexOf(DIRNAME) !== 0){
-        res.send(400, 'Invalid path')
-        return
-    }
-    res.setHeader('Accept', 'application/x-gtar')
+    console.log('dirPath: '+DIRNAME)
     let archive = archiver('zip')
+    res.attachment('downloadArchive.zip');
     archive.pipe(res);
-    archive.bulk([
-        { expand: true, cwd: 'test', src: ['**'], dest: 'source'}
-    ])
+    archive.directory(DIRNAME)
     archive.finalize()
 }
 
@@ -84,7 +79,6 @@ function remove(req, res) {
 }
 
 function setFileMeta(req, res, next) {
-    console.log('hello ')
     req.filePath = path.resolve(path.join(DIRNAME, req.url))
     console.log(req.filePath)
     if(req.filePath.indexOf(DIRNAME) !== 0){
